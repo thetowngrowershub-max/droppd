@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "droppd",
+    "slug": "droppd-customer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "droppd",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.droppd.customer",
+      "config": {
+        "googleMapsApiKey": "REPLACE_WITH_IOS_GOOGLE_MAPS_API_KEY"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "droppd uses your location to find your pickup address and show nearby couriers on the map.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "droppd uses your location to find your pickup address and show nearby couriers on the map.",
+        "UIBackgroundModes": ["remote-notification"]
+      }
+    },
+    "android": {
+      "package": "com.droppd.customer",
+      "adaptiveIcon": {
+        "backgroundColor": "#163A8C"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "POST_NOTIFICATIONS"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "REPLACE_WITH_ANDROID_GOOGLE_MAPS_API_KEY"
+        }
+      }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "droppd uses your location to find your pickup address and show nearby couriers on the map."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#163A8C"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

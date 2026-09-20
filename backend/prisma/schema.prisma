@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  DRIVER
+}
+
+enum VehicleType {
+  BIKE
+  CAR
+  VAN
+}
+
+enum OrderStatus {
+  PLACED
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethodType {
+  CARD
+  BANK_TRANSFER
+  USSD
+}
+
+enum WalletTransactionKind {
+  DEBIT
+  CREDIT
+}
+
+enum DevicePlatform {
+  IOS
+  ANDROID
+}
+
+model User {
+  id             String   @id @default(cuid())
+  role           UserRole
+  fullName       String
+  email          String   @unique
+  phone          String   @unique // E.164, e.g. +2348012345678
+  avatarInitials String
+  rating         Float    @default(5.0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Driver-only fields (null for customers)
+  vehicleType      VehicleType?
+  vehiclePlate     String?
+  isOnline         Boolean      @default(false)
+  totalDeliveries  Int          @default(0)
+
+  balanceKobo Int @default(0) // wallet / earnings balance, NGN minor unit
+
+  addresses            Address[]
+  paymentMethods       PaymentMethod[]
+  walletTransactions   WalletTransaction[]
+  deviceTokens         DeviceToken[]
+  ordersAsCustomer     Order[]             @relation("CustomerOrders")
+  ordersAsDriver       Order[]             @relation("DriverOrders")
+
+  @@index([phone])
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String
+  line1     String
+  area      String
+  city      String
+  state     String
+  country   String   @default("Nigeria")
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
+
+  pickupOrders  Order[] @relation("PickupAddress")
+  dropoffOrders Order[] @relation("DropoffAddress")
+}
+
+model PaymentMethod {
+  id        String            @id @default(cuid())
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      PaymentMethodType
+  label     String
+  isDefault Boolean           @default(false)
+  createdAt DateTime          @default(now())
+}
+
+model Order {
+  id                 String      @id @default(cuid())
+  customerId         String
+  customer           User        @relation("CustomerOrders", fields: [customerId], references: [id], onDelete: Cascade)
+  driverId           String?
+  driver             User?       @relation("DriverOrders", fields: [driverId], references: [id], onDelete: SetNull)
+  pickupAddressId    String
+  pickupAddress      Address     @relation("PickupAddress", fields: [pickupAddressId], references: [id])
+  dropoffAddressId   String
+  dropoffAddress     Address     @relation("DropoffAddress", fields: [dropoffAddressId], references: [id])
+  status             OrderStatus @default(PLACED)
+  statusHistory      Json // [{ status, label, timestamp }]
+  feeKobo            Int
+  confirmationCode   String // 4-digit code shown to customer, entered by driver on delivery
+  etaMinutes         Int
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@index([customerId])
+  @@index([driverId])
+  @@index([status])
+}
+
+model WalletTransaction {
+  id             String                 @id @default(cuid())
+  userId         String
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind           WalletTransactionKind
+  label          String
+  amountKobo     Int
+  relatedOrderId String?
+  createdAt      DateTime               @default(now())
+
+  @@index([userId])
+}
+
+model DeviceToken {
+  id           String         @id @default(cuid())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token        String         @unique
+  platform     DevicePlatform
+  registeredAt DateTime       @default(now())
+
+  @@index([userId])
+}

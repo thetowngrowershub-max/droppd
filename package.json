@@ -1,0 +1,20 @@
+{
+  "name": "droppd",
+  "private": true,
+  "version": "0.1.0",
+  "description": "droppd — package pickup & delivery. Monorepo: Customer app, Driver app, shared package, backend API.",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "backend"
+  ],
+  "scripts": {
+    "customer": "npm run start --workspace apps/customer",
+    "driver": "npm run start --workspace apps/driver",
+    "backend": "npm run dev --workspace backend",
+    "backend:migrate": "npm run prisma:migrate --workspace backend"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "droppd Driver",
+    "slug": "droppd-driver",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "droppd-driver",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.droppd.driver",
+      "config": {
+        "googleMapsApiKey": "REPLACE_WITH_IOS_GOOGLE_MAPS_API_KEY"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "droppd Driver uses your location to show nearby delivery requests and share your live position with customers during an active delivery.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "droppd Driver uses your location in the background while you're online so customers can see your live position en route to a delivery.",
+        "UIBackgroundModes": ["location", "remote-notification"]
+      }
+    },
+    "android": {
+      "package": "com.droppd.driver",
+      "adaptiveIcon": {
+        "backgroundColor": "#163A8C"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "POST_NOTIFICATIONS"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "REPLACE_WITH_ANDROID_GOOGLE_MAPS_API_KEY"
+        }
+      }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "droppd Driver uses your location to show nearby delivery requests.",
+          "locationAlwaysAndWhenInUsePermission": "droppd Driver uses your location in the background while you're online, to share live position with customers en route.",
+          "isAndroidBackgroundLocationEnabled": true
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#163A8C"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

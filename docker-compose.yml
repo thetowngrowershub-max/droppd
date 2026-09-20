@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: droppd
+      POSTGRES_PASSWORD: droppd
+      POSTGRES_DB: droppd
+    ports:
+      - '5432:5432'
+    volumes:
+      - droppd_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  droppd_postgres_data:
