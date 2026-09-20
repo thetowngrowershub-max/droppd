@@ -90,7 +90,7 @@ export function TrackingScreen() {
         <View>
           {order.statusHistory.map((event, i) => {
             const reached = Boolean(event.timestamp);
-            const isCurrent = !reached && order.statusHistory[i - 1]?.timestamp;
+            const isCurrent = !reached && Boolean(order.statusHistory[i - 1]?.timestamp);
             return (
               <View key={event.status} style={styles.timelineRow}>
                 <View style={styles.timelineMarkerCol}>
