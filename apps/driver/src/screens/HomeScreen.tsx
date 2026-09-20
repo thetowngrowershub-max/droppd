@@ -3,8 +3,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { DEFAULT_MAP_REGION, formatNaira, mockApi, transitBlueColors, transitBlueRadii, type Order } from '@droppd/shared';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import { AppMapView } from '../components/AppMapView';
 import { useAuth } from '../context/AuthContext';
 import { usePushNotifications } from '../notifications/usePushNotifications';
 import type { HomeStackParamList } from '../navigation/MainTabNavigator';
@@ -47,11 +47,11 @@ export function HomeScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.mapWrap}>
-        <MapView provider={PROVIDER_GOOGLE} style={StyleSheet.absoluteFill} initialRegion={DEFAULT_MAP_REGION}>
-          {jobs.map((job) => (
-            <Marker key={job.id} coordinate={job.pickup} pinColor={transitBlueColors.accent} title={job.pickup.area} />
-          ))}
-        </MapView>
+        <AppMapView
+          style={StyleSheet.absoluteFill}
+          region={DEFAULT_MAP_REGION}
+          markers={jobs.map((job) => ({ coordinate: job.pickup, pinColor: transitBlueColors.accent, title: job.pickup.area }))}
+        />
 
         <View style={styles.topBar}>
           <View style={styles.greetingCard}>

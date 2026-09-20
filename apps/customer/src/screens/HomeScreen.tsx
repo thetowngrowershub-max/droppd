@@ -10,8 +10,8 @@ import {
 import * as Location from 'expo-location';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import { AppMapView } from '../components/AppMapView';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { useAuth } from '../context/AuthContext';
 import { usePushNotifications } from '../notifications/usePushNotifications';
@@ -56,14 +56,11 @@ export function HomeScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.mapWrap}>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={StyleSheet.absoluteFill}
-          initialRegion={region}
+        <AppMapView
           region={region}
-        >
-          <Marker coordinate={{ latitude: region.latitude, longitude: region.longitude }} pinColor={transitBlueColors.primary} />
-        </MapView>
+          markers={[{ coordinate: { latitude: region.latitude, longitude: region.longitude }, pinColor: transitBlueColors.primary, title: 'Pickup' }]}
+          style={StyleSheet.absoluteFill}
+        />
 
         <View style={styles.topBar}>
           <View style={styles.greetingCard}>

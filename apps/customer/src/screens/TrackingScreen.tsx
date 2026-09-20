@@ -5,8 +5,8 @@ import { formatNaira, mockApi, transitBlueColors, transitBlueRadii, type Order }
 import * as Clipboard from 'expo-clipboard';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import { AppMapView } from '../components/AppMapView';
 import { useAuth } from '../context/AuthContext';
 import type { HomeStackParamList } from '../navigation/MainTabNavigator';
 
@@ -68,19 +68,19 @@ export function TrackingScreen() {
       </View>
 
       <View style={styles.mapCard}>
-        <MapView
-          provider={PROVIDER_GOOGLE}
+        <AppMapView
           style={StyleSheet.absoluteFill}
-          initialRegion={{
+          region={{
             latitude: (order.pickup.latitude + order.dropoff.latitude) / 2,
             longitude: (order.pickup.longitude + order.dropoff.longitude) / 2,
             latitudeDelta: Math.abs(order.pickup.latitude - order.dropoff.latitude) + 0.05,
             longitudeDelta: Math.abs(order.pickup.longitude - order.dropoff.longitude) + 0.05,
           }}
-        >
-          <Marker coordinate={order.pickup} pinColor={transitBlueColors.primary} title="Pickup" />
-          <Marker coordinate={order.dropoff} pinColor={transitBlueColors.accent} title="Drop-off" />
-        </MapView>
+          markers={[
+            { coordinate: order.pickup, pinColor: transitBlueColors.primary, title: 'Pickup' },
+            { coordinate: order.dropoff, pinColor: transitBlueColors.accent, title: 'Drop-off' },
+          ]}
+        />
         <View style={styles.etaBadge}>
           <Text style={styles.etaText}>ETA {order.etaMinutes} min</Text>
         </View>
